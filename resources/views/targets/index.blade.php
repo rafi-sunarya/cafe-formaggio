@@ -33,13 +33,15 @@
         </h3>
 
         <input
-            class="table-search"
-            placeholder="Cari nama / IP address..."
-        >
+    type="text"
+    id="targetSearch"
+    class="table-search"
+    placeholder="Cari nama / IP address..."
+>
     </div>
 
     <div class="table-wrap">
-        <table>
+        <table id="targetsTable">
             <thead>
                 <tr>
                     <th>No</th>

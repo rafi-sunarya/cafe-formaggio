@@ -32,4 +32,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
+    // Search Gateway / Target
+    const searchInput = document.getElementById('targetSearch');
+    const table = document.getElementById('targetsTable');
+
+    if (!searchInput || !table) {
+        return;
+    }
+
+    const rows = table.querySelectorAll('tbody tr');
+
+    searchInput.addEventListener('input', () => {
+        const keyword = searchInput.value.toLowerCase().trim();
+
+        rows.forEach((row) => {
+
+            // Lewati baris kosong
+            if (row.cells.length < 7) {
+                return;
+            }
+
+            const name = row.cells[1].textContent.toLowerCase();
+            const ipAddress = row.cells[2].textContent.toLowerCase();
+
+            const isMatch =
+                name.includes(keyword) ||
+                ipAddress.includes(keyword);
+
+            row.style.display = isMatch ? '' : 'none';
+
+        });
+
+    });
+
 });
