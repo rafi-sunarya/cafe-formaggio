@@ -1,0 +1,6 @@
+@extends('layouts.app')
+@section('title', 'Histori Koneksi')
+@section('content')
+<div class="page-heading"><div><div class="breadcrumb">Home / Histori Koneksi</div><h1>Histori Koneksi</h1><p>Lihat seluruh hasil pengukuran gateway berdasarkan periode.</p></div></div>
+<div class="panel"><div class="filter-bar"><div><label>Tanggal Mulai</label><input type="date"></div><div><label>Tanggal Akhir</label><input type="date"></div><div><label>Target</label><select><option>Semua Target</option><option>Gateway Cafe</option></select></div><div><label>Status</label><select><option>Semua Status</option><option>Online</option><option>Offline</option></select></div><button class="btn btn-primary"><i data-lucide="search"></i>Cari</button></div><div class="table-wrap"><table><thead><tr><th>No</th><th>Waktu</th><th>Target</th><th>Latency</th><th>Packet Loss</th><th>Status</th></tr></thead><tbody>@for($i=1;$i<=8;$i++)<tr><td>{{ $i }}</td><td>24 Sep 2026, 14:{{ 25-$i }}:10</td><td>192.168.1.1</td><td>{{ $i % 4 + 1 }} ms</td><td>{{ $i === 4 ? '10%' : '0%' }}</td><td><span class="status {{ $i === 4 ? 'warning' : 'online' }}"><span></span>{{ $i === 4 ? 'Warning' : 'Online' }}</span></td></tr>@endfor</tbody></table></div></div>
+@endsection
