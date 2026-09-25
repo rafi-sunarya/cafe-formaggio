@@ -1,6 +1,98 @@
 @extends('layouts.app')
-@section('title', 'Histori Koneksi')
+
+@section('title', 'Riwayat Monitoring')
+
 @section('content')
-<div class="page-heading"><div><div class="breadcrumb">Home / Histori Koneksi</div><h1>Histori Koneksi</h1><p>Lihat seluruh hasil pengukuran gateway berdasarkan periode.</p></div></div>
-<div class="panel"><div class="filter-bar"><div><label>Tanggal Mulai</label><input type="date"></div><div><label>Tanggal Akhir</label><input type="date"></div><div><label>Target</label><select><option>Semua Target</option><option>Gateway Cafe</option></select></div><div><label>Status</label><select><option>Semua Status</option><option>Online</option><option>Offline</option></select></div><button class="btn btn-primary"><i data-lucide="search"></i>Cari</button></div><div class="table-wrap"><table><thead><tr><th>No</th><th>Waktu</th><th>Target</th><th>Latency</th><th>Packet Loss</th><th>Status</th></tr></thead><tbody>@for($i=1;$i<=8;$i++)<tr><td>{{ $i }}</td><td>24 Sep 2026, 14:{{ 25-$i }}:10</td><td>192.168.1.1</td><td>{{ $i % 4 + 1 }} ms</td><td>{{ $i === 4 ? '10%' : '0%' }}</td><td><span class="status {{ $i === 4 ? 'warning' : 'online' }}"><span></span>{{ $i === 4 ? 'Warning' : 'Online' }}</span></td></tr>@endfor</tbody></table></div></div>
+
+<div class="page-heading">
+    <div>
+        <div class="breadcrumb">Home / Riwayat Monitoring</div>
+        <h1>Riwayat Monitoring</h1>
+        <p>Catatan hasil pemeriksaan koneksi gateway.</p>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-heading">
+    <h3>
+        <i data-lucide="history"></i>
+        Riwayat Koneksi Gateway
+    </h3>
+
+    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        @foreach ($gateways as $gateway)
+          <form action="{{ route('history.check', $gateway) }}" method="POST">
+        @csrf
+
+        <button type="submit" class="btn btn-primary">
+            <i data-lucide="refresh-cw"></i>
+            Cek {{ $gateway->name }}
+        </button>
+          </form>
+      @endforeach
+    </div>
+</div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama Gateway</th>
+                    <th>IP Address</th>
+                    <th>Status</th>
+                    <th>Response Time</th>
+                    <th>Waktu Pemeriksaan</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @forelse ($logs as $index => $log)
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+
+                        <td>
+                            {{ $log->gateway?->name ?? 'Gateway tidak ditemukan' }}
+                        </td>
+
+                        <td>
+                            {{ $log->gateway?->ip_address ?? '-' }}
+                        </td>
+
+                        <td>
+                            @if ($log->status === 'online')
+                                <span class="status online">
+                                    <span></span>
+                                    Online
+                                </span>
+                            @else
+                                <span class="status offline">
+                                    <span></span>
+                                    Offline
+                                </span>
+                            @endif
+                        </td>
+
+                        <td>
+                            {{ $log->response_time !== null
+                                ? $log->response_time . ' ms'
+                                : '-' }}
+                        </td>
+
+                        <td>
+                            {{ $log->checked_at?->format('d/m/Y H:i:s') ?? '-' }}
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6" style="text-align: center;">
+                            Belum ada riwayat monitoring.
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
+
 @endsection

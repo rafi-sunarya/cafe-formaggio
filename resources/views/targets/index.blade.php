@@ -6,6 +6,20 @@
 @section('content')
 
 @if (session('success'))
+    <div style="
+        background: #dcfce7;
+        color: #166534;
+        padding: 15px 20px;
+        margin-bottom: 20px;
+        border: 1px solid #86efac;
+        border-radius: 8px;
+    ">
+        <strong>Berhasil!</strong>
+        {{ session('success') }}
+    </div>
+@endif
+
+@if (session('success'))
     <div style="background: #dcfce7; color: #166534; padding: 15px 20px; margin-bottom: 20px; border: 1px solid #86efac; border-radius: 8px;">
         <strong>Berhasil!</strong>
         {{ session('success') }}
@@ -49,7 +63,7 @@
                     <th>IP Address</th>
                     <th>Jenis</th>
                     <th>Interval</th>
-                    <th>Status</th>
+                    <th>Status Monitoring</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -68,18 +82,23 @@
                         <td>60 detik</td>
 
                         <td>
-                            @if ($gateway->is_active)
-                                <span class="status online">
-                                    <span></span>
-                                    Aktif
-                                </span>
-                            @else
-                                <span class="status offline">
-                                    <span></span>
-                                    Nonaktif
-                                </span>
-                            @endif
-                        </td>
+    @if (!$gateway->latestConnectionLog)
+        <span class="status offline">
+            <span></span>
+            Belum Dicek
+        </span>
+    @elseif ($gateway->latestConnectionLog->status === 'online')
+        <span class="status online">
+            <span></span>
+            Online
+        </span>
+    @else
+        <span class="status offline">
+            <span></span>
+            Offline
+        </span>
+    @endif
+</td>
 
                         <td>
                             <a
@@ -88,6 +107,18 @@
 >
     Edit
 </a>
+
+<form
+    action="{{ route('history.check', $gateway->id) }}"
+    method="POST"
+    style="display: inline;"
+>
+    @csrf
+
+    <button type="submit" class="action edit">
+        Cek Sekarang
+    </button>
+</form>
 
                             <form
     action="{{ route('targets.destroy', $gateway->id) }}"

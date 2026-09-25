@@ -9,9 +9,11 @@ class GatewayController extends Controller
 {
     public function index()
     {
-        $gateways = Gateway::latest()->get();
+    $gateways = Gateway::with('latestConnectionLog')
+        ->latest()
+        ->get();
 
-        return view('targets.index', compact('gateways'));
+    return view('targets.index', compact('gateways'));
     }
 
     public function create()

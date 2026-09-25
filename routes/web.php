@@ -3,6 +3,9 @@
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GatewayController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ConnectionLogController;
+
 
 // Halaman awal
 Route::get('/', function () {
@@ -27,9 +30,8 @@ Route::middleware('guest')->group(function () {
 // Route untuk user yang sudah login
 Route::middleware('auth')->group(function () {
 
-    Route::get('/dashboard', function () {
-        return view('dashboard.index');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->name('dashboard');
 
     Route::get('/targets', [GatewayController::class, 'index'])
     ->name('targets.index');
@@ -49,9 +51,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/targets/{gateway}', [GatewayController::class, 'destroy'])
     ->name('targets.destroy');
 
-    Route::get('/history', function () {
-        return view('history.index');
-    })->name('history.index');
+    Route::get('/history', [ConnectionLogController::class, 'index'])
+    ->name('history.index');
+
+    Route::post('/history/{gateway}/check', [ConnectionLogController::class, 'check'])
+    ->name('history.check');
 
     Route::get('/incidents', function () {
         return view('incidents.index');
