@@ -13,15 +13,17 @@
 
     
 <div class="target-select">
-    <label for="gateway_id">Target Monitoring</label>
+    <label>Target Monitoring</label>
 
-    <form
-        action="{{ route('dashboard') }}"
-        method="GET"
-    >
+    <form method="GET" action="{{ route('dashboard') }}">
+        <input
+            type="hidden"
+            name="period"
+            value="{{ $period }}"
+        >
+
         <select
             name="gateway_id"
-            id="gateway_id"
             onchange="this.form.submit()"
         >
             <option value="">
@@ -31,13 +33,9 @@
             @foreach ($gateways as $gateway)
                 <option
                     value="{{ $gateway->id }}"
-                    @selected(
-                        (string) $selectedGatewayId ===
-                        (string) $gateway->id
-                    )
+                    {{ (string) $selectedGatewayId === (string) $gateway->id ? 'selected' : '' }}
                 >
-                    {{ $gateway->name }}
-                    ({{ $gateway->ip_address }})
+                    {{ $gateway->name }} ({{ $gateway->ip_address }})
                 </option>
             @endforeach
         </select>
@@ -137,10 +135,29 @@
             </h3>
 
             <div class="period-tabs">
-                <button class="active">24 Jam</button>
-                <button>7 Hari</button>
-                <button>30 Hari</button>
-            </div>
+
+    <a
+        href="{{ route('dashboard', ['gateway_id' => $selectedGatewayId, 'period' => '24h']) }}"
+        class="{{ $period === '24h' ? 'active' : '' }}"
+    >
+        24 Jam
+    </a>
+
+    <a
+        href="{{ route('dashboard', ['gateway_id' => $selectedGatewayId, 'period' => '7d']) }}"
+        class="{{ $period === '7d' ? 'active' : '' }}"
+    >
+        7 Hari
+    </a>
+
+    <a
+        href="{{ route('dashboard', ['gateway_id' => $selectedGatewayId, 'period' => '30d']) }}"
+        class="{{ $period === '30d' ? 'active' : '' }}"
+    >
+        30 Hari
+    </a>
+
+</div>
         </div>
 
         <div class="fake-chart line-chart">
@@ -168,6 +185,17 @@
                     class="line"
                     points="{{ $latencyPoints }}"
                 />
+
+                @foreach ($chartData as $point)
+    <circle
+        class="chart-point"
+        cx="{{ $point['x'] }}"
+        cy="{{ $point['y'] }}"
+        r="4"
+        data-time="{{ $point['time'] }}"
+        data-latency="{{ $point['latency'] ?? 0 }}"
+    />
+@endforeach
             </svg>
         </div>
 
@@ -191,10 +219,29 @@
             </h3>
 
             <div class="period-tabs">
-                <button class="active">24 Jam</button>
-                <button>7 Hari</button>
-                <button>30 Hari</button>
-            </div>
+
+    <a
+        href="{{ route('dashboard', ['gateway_id' => $selectedGatewayId, 'period' => '24h']) }}"
+        class="{{ $period === '24h' ? 'active' : '' }}"
+    >
+        24 Jam
+    </a>
+
+    <a
+        href="{{ route('dashboard', ['gateway_id' => $selectedGatewayId, 'period' => '7d']) }}"
+        class="{{ $period === '7d' ? 'active' : '' }}"
+    >
+        7 Hari
+    </a>
+
+    <a
+        href="{{ route('dashboard', ['gateway_id' => $selectedGatewayId, 'period' => '30d']) }}"
+        class="{{ $period === '30d' ? 'active' : '' }}"
+    >
+        30 Hari
+    </a>
+
+</div>
         </div>
 
         <div class="fake-chart line-chart">
@@ -354,5 +401,51 @@
     </div>
 
 </div>
+
+<script>
+    setInterval(function () {
+        window.location.reload();
+    }, 30000);
+</script>
+
+<div id="chartTooltip" class="chart-tooltip"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const tooltip = document.getElementById('chartTooltip');
+    const points = document.querySelectorAll('.chart-point');
+
+    points.forEach(point => {
+
+        point.addEventListener('mouseenter', function (event) {
+
+            const time = this.dataset.time;
+            const latency = this.dataset.latency;
+
+            tooltip.innerHTML = `
+                <strong>${latency} ms</strong>
+                <span>${time}</span>
+            `;
+
+            tooltip.style.display = 'block';
+
+            const rect = this.getBoundingClientRect();
+
+            tooltip.style.left =
+                (rect.left + rect.width / 2) + 'px';
+
+            tooltip.style.top =
+                (rect.top - 12) + 'px';
+        });
+
+        point.addEventListener('mouseleave', function () {
+            tooltip.style.display = 'none';
+        });
+
+    });
+
+});
+</script>
 
 @endsection

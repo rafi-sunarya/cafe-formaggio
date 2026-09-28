@@ -22,8 +22,11 @@
             <div class="nav-label">MAIN MENU</div>
             <a class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}"><i data-lucide="layout-dashboard"></i>Dashboard</a>
             <a class="nav-item {{ request()->routeIs('history.*') ? 'active' : '' }}" href="{{ route('history.index') }}"><i data-lucide="history"></i>Histori Koneksi</a>
-            <a class="nav-item" href="#"><i data-lucide="chart-no-axes-combined"></i>Laporan <span class="coming">Soon</span></a>
-
+<a class="nav-item {{ request()->routeIs('reports.*') ? 'active' : '' }}"
+   href="{{ route('reports.index') }}">
+    <i data-lucide="chart-no-axes-combined"></i>
+    Laporan
+</a>
             <div class="nav-label">MONITORING</div>
             <a class="nav-item {{ request()->routeIs('targets.*') ? 'active' : '' }}" href="{{ route('targets.index') }}"><i data-lucide="router"></i>Gateway / Target</a>
             <a class="nav-item {{ request()->routeIs('incidents.*') ? 'active' : '' }}" href="{{ route('incidents.index') }}"><i data-lucide="triangle-alert"></i>Gangguan</a>
@@ -49,9 +52,11 @@
     <main class="main-content">
         <header class="topbar">
             <button class="icon-button" id="sidebarToggle"><i data-lucide="menu"></i></button>
-            <div class="topbar-right">
-    <span class="status-dot"></span>
-    <span>Gateway Cafe</span>
+    <div class="topbar-right">
+<span class="status-dot {{ isset($latestLog) && $latestLog?->status === 'offline' ? 'offline' : '' }}"></span>
+<span>
+    {{ $selectedGateway?->name ?? 'Semua Gateway' }}
+</span>
 
     <div class="user-dropdown">
         <button type="button" class="user-menu-button" id="userMenuToggle">
@@ -61,10 +66,13 @@
         </button>
 
         <div class="user-menu" id="userMenu">
-            <a href="#" class="user-menu-item">
-                <i data-lucide="user-round"></i>
-                <span>Profile</span>
-            </a>
+            <a
+    href="{{ route('reports.index') }}"
+    class="nav-item {{ request()->routeIs('reports.index') ? 'active' : '' }}"
+>
+    <i data-lucide="chart-no-axes-combined"></i>
+    <span>Laporan</span>
+</a>
 
             <form action="{{ route('logout') }}" method="POST">
                 @csrf

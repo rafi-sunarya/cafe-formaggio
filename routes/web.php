@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GatewayController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ConnectionLogController;
+use App\Http\Controllers\ReportController;
 
 
 // Halaman awal
@@ -56,6 +57,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/history/{gateway}/check', [ConnectionLogController::class, 'check'])
     ->name('history.check');
+
+    Route::get('/reports', [ReportController::class, 'index'])
+    ->name('reports.index');
 
     Route::get('/incidents', function () {
         return view('incidents.index');
