@@ -10,27 +10,63 @@
         <h1>Riwayat Monitoring</h1>
         <p>Catatan hasil pemeriksaan koneksi gateway.</p>
     </div>
+
+    <div class="target-select">
+        <label for="history_gateway_id">
+            Target Monitoring
+        </label>
+
+        <form
+            action="{{ route('history.index') }}"
+            method="GET"
+        >
+            <select
+                name="gateway_id"
+                id="history_gateway_id"
+                onchange="this.form.submit()"
+            >
+                <option value="">
+                    Semua Gateway
+                </option>
+
+                @foreach ($gateways as $gateway)
+                    <option
+                        value="{{ $gateway->id }}"
+                        @selected(
+                            (string) $selectedGatewayId ===
+                            (string) $gateway->id
+                        )
+                    >
+                        {{ $gateway->name }}
+                        ({{ $gateway->ip_address }})
+                    </option>
+                @endforeach
+            </select>
+        </form>
+    </div>
 </div>
 
 <div class="panel">
-    <div class="panel-heading">
+    <div class="panel-heading history-panel-heading">
+
     <h3>
         <i data-lucide="history"></i>
         Riwayat Koneksi Gateway
     </h3>
 
-    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+    <div class="history-actions">
         @foreach ($gateways as $gateway)
-          <form action="{{ route('history.check', $gateway) }}" method="POST">
-        @csrf
+            <form action="{{ route('history.check', $gateway) }}" method="POST">
+                @csrf
 
-        <button type="submit" class="btn btn-primary">
-            <i data-lucide="refresh-cw"></i>
-            Cek {{ $gateway->name }}
-        </button>
-          </form>
-      @endforeach
+                <button type="submit" class="btn btn-primary history-check-btn">
+                    <i data-lucide="refresh-cw"></i>
+                    <span>Cek {{ $gateway->name }}</span>
+                </button>
+            </form>
+        @endforeach
     </div>
+
 </div>
 
     <div class="table-wrap">

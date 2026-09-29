@@ -92,6 +92,21 @@
         </section>
     </main>
 </div>
+
+        <footer class="app-footer">
+    <div class="footer-brand">
+        <span class="footer-dot"></span>
+        <span>Cafe Formaggio</span>
+    </div>
+
+    <div class="footer-info">
+        Gateway Monitoring
+        <span>•</span>
+        {{ date('Y') }}
+    </div>
+</footer>
+
+
 <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

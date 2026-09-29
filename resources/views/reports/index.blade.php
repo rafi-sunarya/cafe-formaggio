@@ -4,60 +4,49 @@
 
 @section('content')
 
-<div class="page-heading">
+<div class="page-heading report-heading">
 
-    <div>
-        <div class="breadcrumb">
-            Home / Laporan
-        </div>
+    <div class="report-title">
+        <div class="breadcrumb">Home / Laporan</div>
 
-        <h1>
-            Laporan
-        </h1>
+        <h1>Laporan</h1>
 
         <p>
             Ringkasan performa kualitas koneksi gateway berdasarkan periode monitoring.
         </p>
     </div>
 
-    <div class="target-select">
+    <div class="report-actions">
 
-        <label>
-            Target Monitoring
-        </label>
+        <button
+            type="button"
+            class="btn btn-primary print-btn"
+            onclick="window.print()"
+        >
+            <i data-lucide="printer"></i>
+            <span>Cetak Laporan</span>
+        </button>
 
-        <form method="GET" action="{{ route('reports.index') }}">
-
-            <input
-                type="hidden"
-                name="period"
-                value="{{ $period }}"
-            >
+        <div class="target-select">
+            <label for="gateway_id">Target Monitoring</label>
 
             <select
-                name="gateway_id"
-                onchange="this.form.submit()"
+                id="gateway_id"
+                onchange="window.location.href=this.value"
             >
-
-                <option value="">
-                    Semua Gateway
-                </option>
-
-                @foreach ($gateways as $gateway)
-
+                @foreach($gateways as $gateway)
                     <option
-                        value="{{ $gateway->id }}"
-                        {{ (string) $selectedGatewayId === (string) $gateway->id ? 'selected' : '' }}
+                        value="{{ route('reports.index', [
+                            'gateway_id' => $gateway->id,
+                            'period' => $period
+                        ]) }}"
+                        {{ $selectedGatewayId == $gateway->id ? 'selected' : '' }}
                     >
-                        {{ $gateway->name }}
-                        ({{ $gateway->ip_address }})
+                        {{ $gateway->name }} ({{ $gateway->ip_address }})
                     </option>
-
                 @endforeach
-
             </select>
-
-        </form>
+        </div>
 
     </div>
 
