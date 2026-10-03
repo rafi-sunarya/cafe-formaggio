@@ -6,14 +6,22 @@ use App\Http\Controllers\GatewayController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ConnectionLogController;
 use App\Http\Controllers\ReportController;
+use App\Models\User;
 
 
+// ============================================================
 // Halaman awal
+// ============================================================
+
 Route::get('/', function () {
     return redirect()->route('dashboard');
 })->middleware('auth');
 
-// Route untuk user yang belum login
+
+// ============================================================
+// User yang belum login
+// ============================================================
+
 Route::middleware('guest')->group(function () {
 
     Route::get('/login', [
@@ -28,52 +36,127 @@ Route::middleware('guest')->group(function () {
 
 });
 
-// Route untuk user yang sudah login
+
+// ============================================================
+// User yang sudah login
+// ============================================================
+
 Route::middleware('auth')->group(function () {
 
-    Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->name('dashboard');
 
-    Route::get('/targets', [GatewayController::class, 'index'])
-    ->name('targets.index');
+    // ========================================================
+    // SEMUA ROLE
+    // ========================================================
 
-    Route::get('/targets/create', [GatewayController::class, 'create'])
-    ->name('targets.create');
+    // Dashboard
+    Route::get('/dashboard', [
+        DashboardController::class,
+        'index'
+    ])->name('dashboard');
 
-    Route::post('/targets', [GatewayController::class, 'store'])
-    ->name('targets.store');
 
-    Route::get('/targets/{gateway}/edit', [GatewayController::class, 'edit'])
-    ->name('targets.edit');
+    // Histori
+    Route::get('/history', [
+        ConnectionLogController::class,
+        'index'
+    ])->name('history.index');
 
-    Route::put('/targets/{gateway}', [GatewayController::class, 'update'])
-    ->name('targets.update');
 
-    Route::delete('/targets/{gateway}', [GatewayController::class, 'destroy'])
-    ->name('targets.destroy');
+    // ========================================================
+    // ADMIN + PEMILIK
+    // ========================================================
 
-    Route::get('/history', [ConnectionLogController::class, 'index'])
-    ->name('history.index');
+    // Laporan
+    Route::middleware('role:admin,pemilik')->group(function () {
 
-    Route::post('/history/{gateway}/check', [ConnectionLogController::class, 'check'])
-    ->name('history.check');
+        Route::get('/reports', [
+            ReportController::class,
+            'index'
+        ])->name('reports.index');
 
-    Route::get('/reports', [ReportController::class, 'index'])
-    ->name('reports.index');
+    });
+
+
+    // ========================================================
+    // ADMIN
+    // ========================================================
+
+    Route::middleware('role:admin')->group(function () {
+
+    // Pengguna
+    Route::get('/users', function () {
+        return view('users.index');
+    })->name('users.index');
+
+});
+
+
+    // ========================================================
+    // TEKNISI
+    // ========================================================
+
+    Route::middleware('role:teknisi')->group(function () {
+
+    // Gateway / Target
+    Route::get('/targets', [
+        GatewayController::class,
+        'index'
+    ])->name('targets.index');
+
+    Route::get('/targets/create', [
+        GatewayController::class,
+        'create'
+    ])->name('targets.create');
+
+    Route::post('/targets', [
+        GatewayController::class,
+        'store'
+    ])->name('targets.store');
+
+    Route::get('/targets/{gateway}/edit', [
+        GatewayController::class,
+        'edit'
+    ])->name('targets.edit');
+
+    Route::put('/targets/{gateway}', [
+        GatewayController::class,
+        'update'
+    ])->name('targets.update');
+
+    Route::delete('/targets/{gateway}', [
+        GatewayController::class,
+        'destroy'
+    ])->name('targets.destroy');
+
+    // Cek Gateway dari Histori
+    Route::post('/history/{gateway}/check', [
+        ConnectionLogController::class,
+        'check'
+    ])->name('history.check');
+
+    // Pengaturan
+    Route::get('/settings', function () {
+        return view('settings.index');
+    })->name('settings.index');
+});
+
+// ========================================================
+// ADMIN + TEKNISI
+// ========================================================
+
+Route::middleware('role:admin,teknisi')->group(function () {
 
     Route::get('/incidents', function () {
         return view('incidents.index');
     })->name('incidents.index');
 
-    Route::get('/users', function () {
-        return view('users.index');
-    })->name('users.index');
+});
 
-    Route::get('/settings', function () {
-        return view('settings.index');
-    })->name('settings.index');
 
-    // Logout
+    // ========================================================
+    // LOGOUT
+    // ========================================================
+
     Route::post('/logout', [
         LoginController::class,
         'logout'

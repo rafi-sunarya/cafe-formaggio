@@ -1,8 +1,36 @@
 document.addEventListener("DOMContentLoaded", () => {
-    if (window.lucide) lucide.createIcons();
+    // =====================================================
+    // LUCIDE ICON
+    // =====================================================
+    if (window.lucide) {
+        lucide.createIcons();
+    }
 
-    // Sidebar Toggle
-    // Sidebar Toggle
+    // =====================================================
+    // ROLE RESTRICTION
+    // =====================================================
+    window.showRoleRestriction = function (event, element) {
+        event.preventDefault();
+
+        const role = document.body.dataset.role || "user";
+        const feature = element?.dataset.feature || "Fitur ini";
+
+        const roleName = {
+            admin: "admin",
+            teknisi: "teknisi",
+            pemilik: "pemilik",
+        };
+
+        const currentRole = roleName[role] || role;
+
+        showRestrictionToast(
+            `${feature} tidak tersedia, anda masuk sebagai ${currentRole}.`,
+        );
+    };
+
+    // =====================================================
+    // SIDEBAR TOGGLE
+    // =====================================================
     const sidebar = document.querySelector(".sidebar");
     const sidebarToggle = document.getElementById("sidebarToggle");
 
@@ -14,12 +42,10 @@ document.addEventListener("DOMContentLoaded", () => {
         sidebar.classList.toggle("collapsed");
     });
 
-    // Jangan tutup kalau klik di dalam sidebar
     sidebar?.addEventListener("click", (e) => {
         e.stopPropagation();
     });
 
-    // Tutup sidebar kalau klik area di luar sidebar
     document.addEventListener("click", (e) => {
         if (window.innerWidth > 800) return;
 
@@ -32,13 +58,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // User Dropdown Toggle
+    // =====================================================
+    // USER DROPDOWN
+    // =====================================================
     const userMenuToggle = document.getElementById("userMenuToggle");
     const userMenu = document.getElementById("userMenu");
 
     if (userMenuToggle && userMenu) {
         userMenuToggle.addEventListener("click", (event) => {
             event.stopPropagation();
+
             userMenu.classList.toggle("show");
         });
 
@@ -52,32 +81,110 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Search Gateway / Target
+    // =====================================================
+    // SEARCH GATEWAY / TARGET
+    // =====================================================
     const searchInput = document.getElementById("targetSearch");
     const table = document.getElementById("targetsTable");
 
-    if (!searchInput || !table) {
-        return;
+    // Jangan return dari seluruh script.
+    // Search hanya dijalankan kalau elemennya memang ada.
+    if (searchInput && table) {
+        const rows = table.querySelectorAll("tbody tr");
+
+        searchInput.addEventListener("input", () => {
+            const keyword = searchInput.value.toLowerCase().trim();
+
+            rows.forEach((row) => {
+                if (row.cells.length < 7) {
+                    return;
+                }
+
+                const name = row.cells[1].textContent.toLowerCase().trim();
+
+                const ipAddress = row.cells[2].textContent.toLowerCase().trim();
+
+                const isMatch =
+                    name.includes(keyword) || ipAddress.includes(keyword);
+
+                row.style.display = isMatch ? "" : "none";
+            });
+        });
     }
 
-    const rows = table.querySelectorAll("tbody tr");
+    // =====================================================
+    // RESTRICTION TOAST
+    // =====================================================
+    function showRestrictionToast(message) {
+        // Hapus toast lama
+        const oldToast = document.querySelector(".restriction-toast");
 
-    searchInput.addEventListener("input", () => {
-        const keyword = searchInput.value.toLowerCase().trim();
+        if (oldToast) {
+            oldToast.remove();
+        }
 
-        rows.forEach((row) => {
-            // Lewati baris kosong
-            if (row.cells.length < 7) {
+        // Buat toast
+        const toast = document.createElement("div");
+
+        toast.className = "restriction-toast";
+
+        toast.innerHTML = `
+            <div class="restriction-toast-icon">
+                <i data-lucide="lock"></i>
+            </div>
+
+            <div class="restriction-toast-content">
+                <strong>Akses Terbatas</strong>
+                <span>${message}</span>
+            </div>
+
+            <button
+                type="button"
+                class="restriction-toast-close"
+                aria-label="Tutup"
+            >
+                <i data-lucide="x"></i>
+            </button>
+        `;
+
+        document.body.appendChild(toast);
+
+        // Aktifkan Lucide
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+
+        // Tombol close
+        const closeButton = toast.querySelector(".restriction-toast-close");
+
+        closeButton?.addEventListener("click", () => {
+            toast.classList.remove("show");
+
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.remove();
+                }
+            }, 300);
+        });
+
+        // Animasi masuk
+        requestAnimationFrame(() => {
+            toast.classList.add("show");
+        });
+
+        // Hilang otomatis setelah 4 detik
+        setTimeout(() => {
+            if (!toast.parentElement) {
                 return;
             }
 
-            const name = row.cells[1].textContent.toLowerCase();
-            const ipAddress = row.cells[2].textContent.toLowerCase();
+            toast.classList.remove("show");
 
-            const isMatch =
-                name.includes(keyword) || ipAddress.includes(keyword);
-
-            row.style.display = isMatch ? "" : "none";
-        });
-    });
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.remove();
+                }
+            }, 300);
+        }, 4000);
+    }
 });
