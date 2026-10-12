@@ -6,6 +6,7 @@ use App\Http\Controllers\GatewayController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ConnectionLogController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\UserController;
 use App\Models\User;
 
 
@@ -78,18 +79,42 @@ Route::middleware('auth')->group(function () {
 
 
     // ========================================================
-    // ADMIN
-    // ========================================================
+// ADMIN
+// ========================================================
 
-    Route::middleware('role:admin')->group(function () {
+Route::middleware('role:admin')->group(function () {
 
-    // Pengguna
-    Route::get('/users', function () {
-        return view('users.index');
-    })->name('users.index');
+    // Daftar pengguna
+    Route::get('/users', [
+        UserController::class, 'index'
+    ])->name('users.index');
+
+    // Form tambah pengguna
+    Route::get('/users/create', [
+        UserController::class, 'create'
+    ])->name('users.create');
+
+    // Simpan pengguna baru
+    Route::post('/users', [
+        UserController::class, 'store'
+    ])->name('users.store');
+
+    // Form edit pengguna
+    Route::get('/users/{user}/edit', [
+        UserController::class, 'edit'
+    ])->name('users.edit');
+
+    // Simpan perubahan pengguna
+    Route::put('/users/{user}', [
+        UserController::class, 'update'
+    ])->name('users.update');
+
+    // Hapus pengguna
+    Route::delete('/users/{user}', [
+        UserController::class, 'destroy'
+    ])->name('users.destroy');
 
 });
-
 
     // ========================================================
     // TEKNISI

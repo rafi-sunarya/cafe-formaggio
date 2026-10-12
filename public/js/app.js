@@ -187,4 +187,92 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 300);
         }, 4000);
     }
+
+    // ========================================
+// TOAST NOTIFICATION
+// ========================================
+        function showAppToast(title, message, icon = "lock", type = "restriction") {
+    const oldToast = document.querySelector(".restriction-toast");
+
+    if (oldToast) {
+        oldToast.remove();
+    }
+
+    const toast = document.createElement("div");
+    toast.className = `restriction-toast ${type}-toast`;
+
+    const iconElement = document.createElement("i");
+    iconElement.setAttribute("data-lucide", icon);
+
+    const iconWrapper = document.createElement("div");
+    iconWrapper.className = "restriction-toast-icon";
+    iconWrapper.appendChild(iconElement);
+
+    const content = document.createElement("div");
+    content.className = "restriction-toast-content";
+
+    const heading = document.createElement("strong");
+    heading.textContent = title;
+
+    const description = document.createElement("span");
+    description.textContent = message;
+
+    content.append(heading, description);
+
+    const close = document.createElement("button");
+    close.type = "button";
+    close.className = "restriction-toast-close";
+    close.setAttribute("aria-label", "Tutup");
+
+    const closeIcon = document.createElement("i");
+    closeIcon.setAttribute("data-lucide", "x");
+    close.appendChild(closeIcon);
+
+    toast.append(iconWrapper, content, close);
+    document.body.appendChild(toast);
+
+    if (window.lucide) {
+        window.lucide.createIcons();
+    }
+
+    const removeToast = () => {
+        if (!toast.isConnected) return;
+
+        toast.classList.remove("show");
+
+        setTimeout(() => toast.remove(), 300);
+    };
+
+    close.addEventListener("click", removeToast);
+
+    requestAnimationFrame(() => toast.classList.add("show"));
+
+    setTimeout(removeToast, 4000);
+}
+
+function showRestrictionToast(message) {
+    const role = document.body.dataset.role || "user";
+
+    showAppToast(
+        "Akses Terbatas",
+        message,
+        "lock",
+        "restriction"
+    );
+}
+
+// Notifikasi sukses/error dari Laravel
+const flashToast = document.getElementById("flashToastData");
+
+if (flashToast) {
+    const type = flashToast.dataset.type;
+    const message = flashToast.dataset.message;
+
+    if (type === "success") {
+        showAppToast("Berhasil!", message, "check-circle", "success");
+    } else {
+        showAppToast("Terjadi Kesalahan", message, "alert-circle", "error");
+    }
+}
+
 });

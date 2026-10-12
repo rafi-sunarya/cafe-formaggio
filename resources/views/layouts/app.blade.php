@@ -4,19 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Cafe Formaggio')</title>
+    <link rel="icon" type="image/png"
+        href="{{ asset('images/logo-cafe.png') }}?v=1">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body data-role="{{ auth()->user()->role ?? '' }}">
+
+{{-- Data notifikasi dari Laravel --}}
+@if (session('success') || session('error'))
+    <div
+        id="flashToastData"
+        data-type="{{ session('success') ? 'success' : 'error' }}"
+        data-message="{{ session('success') ?? session('error') }}"
+        hidden
+    ></div>
+@endif
+
 <div class="app-shell">
     <aside class="sidebar" id="sidebar">
-        <div class="brand">
-            <div class="brand-icon">☕</div>
-            <div>
-                <div class="brand-name">Cafe Formaggio</div>
-                <div class="brand-subtitle">Gateway Monitoring</div>
-            </div>
-        </div>
+
+<div class="brand">
+    <div class="brand-icon">
+        <img
+            src="{{ asset('images/logo-cafe.png') }}"
+            alt="Logo Cafe Formaggio"
+        >
+    </div>
+
+    <div>
+        <div class="brand-name">Cafe Formaggio</div>
+        <div class="brand-subtitle">Gateway Monitoring</div>
+    </div>
+</div>
 
         <nav class="sidebar-nav">
 
@@ -133,7 +153,7 @@
             class="nav-item {{ request()->routeIs('users.*') ? 'active' : '' }}"
             href="{{ route('users.index') }}"
         >
-            <i data-lucide="users"></i>
+            <i data-lucide="user-round"></i>
             <span>Pengguna</span>
         </a>
 
@@ -144,7 +164,7 @@
             class="nav-item locked-nav"
             onclick="showRoleRestriction(event, this)"
         >
-            <i data-lucide="users"></i>
+            <i data-lucide="user-round"></i>
             <span>Pengguna</span>
             <i data-lucide="lock" class="nav-lock"></i>
         </a>

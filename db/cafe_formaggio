@@ -1,0 +1,237 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               8.4.3 - MySQL Community Server - GPL
+-- Server OS:                    Win64
+-- HeidiSQL Version:             12.8.0.6908
+-- --------------------------------------------------------
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+
+-- Dumping database structure for cafe_formaggio
+CREATE DATABASE IF NOT EXISTS `cafe_formaggio` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `cafe_formaggio`;
+
+-- Dumping structure for table cafe_formaggio.cache
+CREATE TABLE IF NOT EXISTS `cache` (
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expiration` int NOT NULL,
+  PRIMARY KEY (`key`),
+  KEY `cache_expiration_index` (`expiration`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table cafe_formaggio.cache: ~0 rows (approximately)
+
+-- Dumping structure for table cafe_formaggio.cache_locks
+CREATE TABLE IF NOT EXISTS `cache_locks` (
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `owner` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expiration` int NOT NULL,
+  PRIMARY KEY (`key`),
+  KEY `cache_locks_expiration_index` (`expiration`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table cafe_formaggio.cache_locks: ~0 rows (approximately)
+
+-- Dumping structure for table cafe_formaggio.connection_logs
+CREATE TABLE IF NOT EXISTS `connection_logs` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `gateway_id` bigint unsigned NOT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `response_time` int unsigned DEFAULT NULL,
+  `error_message` text COLLATE utf8mb4_unicode_ci,
+  `checked_at` timestamp NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `connection_logs_gateway_id_foreign` (`gateway_id`),
+  CONSTRAINT `connection_logs_gateway_id_foreign` FOREIGN KEY (`gateway_id`) REFERENCES `gateways` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table cafe_formaggio.connection_logs: ~33 rows (approximately)
+INSERT INTO `connection_logs` (`id`, `gateway_id`, `status`, `response_time`, `error_message`, `checked_at`, `created_at`, `updated_at`) VALUES
+	(1, 1, 'offline', NULL, 'Gateway tidak dapat dijangkau.', '2026-09-24 19:40:54', '2026-09-24 19:40:54', '2026-09-24 19:40:54'),
+	(2, 1, 'offline', NULL, 'Gateway tidak dapat dijangkau.', '2026-09-24 19:51:01', '2026-09-24 19:51:01', '2026-09-24 19:51:01'),
+	(3, 1, 'online', 230, NULL, '2026-09-24 19:55:43', '2026-09-24 19:55:43', '2026-09-24 19:55:43'),
+	(4, 1, 'online', 217, NULL, '2026-09-24 19:55:50', '2026-09-24 19:55:50', '2026-09-24 19:55:50'),
+	(5, 1, 'online', 220, NULL, '2026-09-24 19:55:52', '2026-09-24 19:55:52', '2026-09-24 19:55:52'),
+	(6, 1, 'online', 225, NULL, '2026-09-24 19:59:04', '2026-09-24 19:59:04', '2026-09-24 19:59:04'),
+	(7, 5, 'offline', NULL, 'Gateway tidak dapat dijangkau.', '2026-09-24 19:59:07', '2026-09-24 19:59:07', '2026-09-24 19:59:07'),
+	(10, 1, 'online', 362, NULL, '2026-09-25 01:27:36', '2026-09-25 01:27:36', '2026-09-25 01:27:36'),
+	(12, 1, 'online', 220, NULL, '2026-09-25 01:28:45', '2026-09-25 01:28:45', '2026-09-25 01:28:45'),
+	(13, 1, 'online', 229, NULL, '2026-09-25 01:28:48', '2026-09-25 01:28:48', '2026-09-25 01:28:48'),
+	(14, 1, 'online', 216, NULL, '2026-09-25 01:43:14', '2026-09-25 01:43:14', '2026-09-25 01:43:14'),
+	(15, 1, 'online', 224, NULL, '2026-09-25 01:43:18', '2026-09-25 01:43:18', '2026-09-25 01:43:18'),
+	(16, 1, 'online', 214, NULL, '2026-09-25 01:44:41', '2026-09-25 01:44:41', '2026-09-25 01:44:41'),
+	(17, 1, 'online', 228, NULL, '2026-09-25 01:44:44', '2026-09-25 01:44:44', '2026-09-25 01:44:44'),
+	(18, 1, 'online', 214, NULL, '2026-09-25 01:44:56', '2026-09-25 01:44:56', '2026-09-25 01:44:56'),
+	(19, 1, 'online', 223, NULL, '2026-09-25 01:44:59', '2026-09-25 01:44:59', '2026-09-25 01:44:59'),
+	(20, 1, 'online', 219, NULL, '2026-09-25 01:46:10', '2026-09-25 01:46:10', '2026-09-25 01:46:10'),
+	(21, 1, 'online', 216, NULL, '2026-09-25 01:46:15', '2026-09-25 01:46:15', '2026-09-25 01:46:15'),
+	(22, 1, 'online', 211, NULL, '2026-09-25 01:46:58', '2026-09-25 01:46:58', '2026-09-25 01:46:58'),
+	(23, 1, 'online', 220, NULL, '2026-09-25 01:47:00', '2026-09-25 01:47:00', '2026-09-25 01:47:00'),
+	(25, 1, 'online', 219, NULL, '2026-09-25 01:47:10', '2026-09-25 01:47:10', '2026-09-25 01:47:10'),
+	(26, 1, 'online', 214, NULL, '2026-09-25 01:47:31', '2026-09-25 01:47:31', '2026-09-25 01:47:31'),
+	(27, 1, 'online', 215, NULL, '2026-09-25 02:16:47', '2026-09-25 02:16:47', '2026-09-25 02:16:47'),
+	(28, 1, 'online', 214, NULL, '2026-09-25 02:16:49', '2026-09-25 02:16:49', '2026-09-25 02:16:49'),
+	(29, 1, 'online', 214, NULL, '2026-09-25 02:17:45', '2026-09-25 02:17:45', '2026-09-25 02:17:45'),
+	(30, 1, 'online', 230, NULL, '2026-09-25 09:19:54', '2026-09-25 09:19:54', '2026-09-25 09:19:54'),
+	(31, 1, 'online', 213, NULL, '2026-09-25 09:20:54', '2026-09-25 09:20:54', '2026-09-25 09:20:54'),
+	(32, 1, 'online', 222, NULL, '2026-09-25 09:20:55', '2026-09-25 09:20:55', '2026-09-25 09:20:55'),
+	(33, 1, 'online', 216, NULL, '2026-09-25 09:45:41', '2026-09-25 09:45:41', '2026-09-25 09:45:41'),
+	(34, 1, 'online', 212, NULL, '2026-09-25 09:45:43', '2026-09-25 09:45:43', '2026-09-25 09:45:43'),
+	(37, 5, 'offline', NULL, 'Gateway tidak dapat dijangkau.', '2026-10-12 01:11:59', '2026-10-12 01:11:59', '2026-10-12 01:11:59'),
+	(38, 1, 'online', 225, NULL, '2026-10-12 01:12:03', '2026-10-12 01:12:03', '2026-10-12 01:12:03'),
+	(39, 5, 'online', 224, NULL, '2026-10-12 01:12:56', '2026-10-12 01:12:56', '2026-10-12 01:12:56'),
+	(40, 5, 'online', 204, NULL, '2026-10-12 01:13:03', '2026-10-12 01:13:03', '2026-10-12 01:13:03'),
+	(41, 5, 'online', 218, NULL, '2026-10-12 01:13:05', '2026-10-12 01:13:05', '2026-10-12 01:13:05'),
+	(42, 5, 'online', 213, NULL, '2026-10-12 01:13:07', '2026-10-12 01:13:07', '2026-10-12 01:13:07'),
+	(43, 5, 'online', 439, NULL, '2026-10-12 06:21:14', '2026-10-12 06:21:14', '2026-10-12 06:21:14'),
+	(44, 5, 'online', 218, NULL, '2026-10-12 06:21:18', '2026-10-12 06:21:18', '2026-10-12 06:21:18'),
+	(45, 5, 'online', 226, NULL, '2026-10-12 08:58:47', '2026-10-12 08:58:47', '2026-10-12 08:58:47'),
+	(46, 5, 'online', 211, NULL, '2026-10-12 08:58:49', '2026-10-12 08:58:49', '2026-10-12 08:58:49'),
+	(47, 1, 'online', 215, NULL, '2026-10-12 08:58:49', '2026-10-12 08:58:49', '2026-10-12 08:58:49');
+
+-- Dumping structure for table cafe_formaggio.failed_jobs
+CREATE TABLE IF NOT EXISTS `failed_jobs` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table cafe_formaggio.failed_jobs: ~0 rows (approximately)
+
+-- Dumping structure for table cafe_formaggio.gateways
+CREATE TABLE IF NOT EXISTS `gateways` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ip_address` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table cafe_formaggio.gateways: ~3 rows (approximately)
+INSERT INTO `gateways` (`id`, `name`, `ip_address`, `description`, `is_active`, `created_at`, `updated_at`) VALUES
+	(1, 'Gateway Cafe', '192.168.100.1', 'Gateway utama Cafe Formaggio', 1, '2026-09-24 01:44:53', '2026-09-24 19:55:25'),
+	(5, 'Gateway Kantor', '192.168.100.140', 'Gateway utama kantor', 1, '2026-09-24 02:06:38', '2026-10-12 01:12:54');
+
+-- Dumping structure for table cafe_formaggio.jobs
+CREATE TABLE IF NOT EXISTS `jobs` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `queue` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `attempts` tinyint unsigned NOT NULL,
+  `reserved_at` int unsigned DEFAULT NULL,
+  `available_at` int unsigned NOT NULL,
+  `created_at` int unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `jobs_queue_index` (`queue`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table cafe_formaggio.jobs: ~0 rows (approximately)
+
+-- Dumping structure for table cafe_formaggio.job_batches
+CREATE TABLE IF NOT EXISTS `job_batches` (
+  `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `total_jobs` int NOT NULL,
+  `pending_jobs` int NOT NULL,
+  `failed_jobs` int NOT NULL,
+  `failed_job_ids` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `options` mediumtext COLLATE utf8mb4_unicode_ci,
+  `cancelled_at` int DEFAULT NULL,
+  `created_at` int NOT NULL,
+  `finished_at` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table cafe_formaggio.job_batches: ~0 rows (approximately)
+
+-- Dumping structure for table cafe_formaggio.migrations
+CREATE TABLE IF NOT EXISTS `migrations` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table cafe_formaggio.migrations: ~4 rows (approximately)
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
+	(1, '0001_01_01_000000_create_users_table', 1),
+	(2, '0001_01_01_000001_create_cache_table', 1),
+	(3, '0001_01_01_000002_create_jobs_table', 1),
+	(4, '2026_09_24_084230_create_gateways_table', 2),
+	(5, '2026_09_25_023005_create_connection_logs_table', 3),
+	(6, '2026_10_03_202334_add_role_to_users_table', 4);
+
+-- Dumping structure for table cafe_formaggio.password_reset_tokens
+CREATE TABLE IF NOT EXISTS `password_reset_tokens` (
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table cafe_formaggio.password_reset_tokens: ~0 rows (approximately)
+
+-- Dumping structure for table cafe_formaggio.sessions
+CREATE TABLE IF NOT EXISTS `sessions` (
+  `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` bigint unsigned DEFAULT NULL,
+  `ip_address` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_agent` text COLLATE utf8mb4_unicode_ci,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `last_activity` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `sessions_user_id_index` (`user_id`),
+  KEY `sessions_last_activity_index` (`last_activity`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table cafe_formaggio.sessions: ~1 rows (approximately)
+INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
+	('X5lrtwgAyMf0AQK3XU6qOnPkGIh2mLf0vzWKQiSg', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiZXp4MGhoMjJJQ1VVNFpveEFRYnF4OXRpblY1MEMzTU1GOTFISFZVbCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mjk6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9oaXN0b3J5IjtzOjU6InJvdXRlIjtzOjEzOiJoaXN0b3J5LmluZGV4Ijt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Mjt9', 1791795530);
+
+-- Dumping structure for table cafe_formaggio.users
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email_verified_at` timestamp NULL DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'admin',
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `users_email_unique` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table cafe_formaggio.users: ~4 rows (approximately)
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `role`, `remember_token`, `created_at`, `updated_at`) VALUES
+	(1, 'Administrator', 'admin@formaggio.test', NULL, '$2y$12$nuGWadX.YKEGog.lU3clGehtYn/sjywL4UGRgZqQsFhbCNxwCQyZa', 'admin', 'q5qGiCdVqVCt9sTCAygsAadMIKqe1N3N95MkllAc8wARVKmHvG93rU6aXSW2', '2026-09-24 01:01:53', '2026-09-24 01:01:53'),
+	(2, 'Teknisi', 'teknisi@formaggio.test', NULL, '$2y$12$4CmBA4t3nlH1UHwisvKubevotalnbQWdOVltTHpK8RZEhn1b6MUoi', 'teknisi', NULL, '2026-10-12 01:10:17', '2026-10-12 01:10:17'),
+	(3, 'Pemilik', 'pemilik@formaggio.test', NULL, '$2y$12$He4nqEcGQNc4VPo4aeKk4O8J/T1ttO.NuhO5RqxlzCWrJoe78WiPu', 'pemilik', NULL, '2026-10-12 01:10:17', '2026-10-12 01:10:17'),
+	(6, 'Muhammad Rafi Sunarya', 'muhammadrafi.sunarya825@gmail.com', NULL, '$2y$12$Gmrcbq4Y1HVlpJgw26y.GOSpvs8qHdMLe40J.XRmdCgC6GMzIBHWG', 'pemilik', NULL, '2026-10-12 08:56:43', '2026-10-12 08:56:43');
+
+/*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;

@@ -1153,6 +1153,554 @@ td {
     flex-shrink: 0;
 }
 
+/* Tombol Tambah Pengguna */
+.btn-add-user {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 11px 17px;
+    min-height: 43px;
+
+    background: #65432f;
+    color: #ffffff !important;
+    border: 1px solid #65432f;
+    border-radius: 10px;
+
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none !important;
+
+    box-shadow: 0 3px 8px rgba(83, 52, 32, 0.10);
+    transition: all 0.2s ease;
+}
+
+.btn-add-user:hover {
+    background: #4f3424;
+    border-color: #4f3424;
+    color: #ffffff !important;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 12px rgba(83, 52, 32, 0.18);
+}
+
+.btn-add-user:active {
+    transform: translateY(0);
+}
+
+.btn-add-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.17);
+    font-size: 19px;
+    font-weight: 400;
+}
+
+/* ========================================
+USERS PAGE - HEADER & ADD BUTTON
+======================================== */
+
+.users-page-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    width: 100%;
+    margin-bottom: 24px;
+}
+
+.users-page-heading > div {
+    min-width: 0;
+}
+
+.users-page-heading h1 {
+    margin: 0;
+    color: #302319;
+    font-size: 27px;
+    font-weight: 750;
+    letter-spacing: -0.7px;
+    line-height: 1.3;
+}
+
+.users-page-heading p {
+    margin: 7px 0 0;
+    color: #8a817a;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* Tombol tambah pengguna */
+.btn-add-user {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    flex-shrink: 0;
+
+    min-height: 42px;
+    padding: 0 17px;
+
+    background: #65432f;
+    color: #fff !important;
+    border: 1px solid #65432f;
+    border-radius: 10px;
+
+    font-size: 12px;
+    font-weight: 650;
+    line-height: 1;
+    text-decoration: none !important;
+    white-space: nowrap;
+
+    box-shadow: 0 2px 5px rgba(75, 48, 30, 0.08);
+    transition: background 0.2s ease,
+                box-shadow 0.2s ease,
+                transform 0.2s ease;
+}
+
+.btn-add-user:hover {
+    background: #513623;
+    border-color: #513623;
+    color: #fff !important;
+    box-shadow: 0 4px 10px rgba(75, 48, 30, 0.16);
+    transform: translateY(-1px);
+}
+
+.btn-add-user:active {
+    transform: translateY(0);
+}
+
+.btn-add-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 19px;
+    height: 19px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.17);
+    font-size: 17px;
+    font-weight: 400;
+}
+
+/* Responsif */
+@media (max-width: 480px) {
+    .users-page-heading {
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+    .users-page-heading h1 {
+        font-size: 23px;
+    }
+
+    .btn-add-user {
+        min-height: 39px;
+        padding: 0 12px;
+        font-size: 11px;
+    }
+}
+
+/* Logo Cafe Formaggio di sidebar */
+.brand-icon {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.brand-icon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* ========================================
+   USER ACTIONS
+======================================== */
+
+.user-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.user-actions form {
+    display: inline-flex;
+    margin: 0;
+}
+
+.user-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 31px;
+    padding: 6px 10px;
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.user-action-btn svg {
+    width: 14px;
+    height: 14px;
+}
+
+.user-action-btn.edit {
+    background: #f7eee5;
+    border: 1px solid #ead8c7;
+    color: #765033;
+}
+
+.user-action-btn.edit:hover {
+    background: #ecddcc;
+    border-color: #d8bda2;
+}
+
+.user-action-btn.delete {
+    background: #fff1ef;
+    border: 1px solid #f2d0cb;
+    color: #b33b31;
+}
+
+.user-action-btn.delete:hover {
+    background: #ffe1dd;
+    border-color: #eab3ac;
+}
+
+.current-user-label {
+    color: #998b7f;
+    font-size: 11px;
+}
+
+.user-create-page .alert-error {
+    margin-bottom: 20px;
+}
+
+@media (max-width: 600px) {
+    .user-actions {
+        gap: 5px;
+    }
+
+    .user-action-btn {
+        padding: 7px;
+    }
+
+    .user-action-btn span {
+        display: none;
+    }
+}
+
+
+/* ========================================
+   TABEL PENGGUNA - KOLOM AKSI
+======================================== */
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.users-table th:last-child,
+.users-table td:last-child {
+    min-width: 175px;
+    width: 175px;
+}
+
+.users-table td {
+    vertical-align: middle;
+}
+
+.user-actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+}
+
+.user-actions form {
+    display: inline-flex;
+    margin: 0;
+}
+
+.user-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    min-height: 30px;
+    padding: 6px 9px;
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background .2s ease, border-color .2s ease;
+}
+
+.user-action-btn svg {
+    width: 13px;
+    height: 13px;
+}
+
+.user-action-btn.edit {
+    background: #f7eee5;
+    border: 1px solid #ead8c7;
+    color: #765033;
+}
+
+.user-action-btn.edit:hover {
+    background: #ecddcc;
+    border-color: #d8bda2;
+}
+
+.user-action-btn.delete {
+    background: #fff1ef;
+    border: 1px solid #f2d0cb;
+    color: #b33b31;
+}
+
+.user-action-btn.delete:hover {
+    background: #ffe1dd;
+    border-color: #eab3ac;
+}
+
+.current-user-label {
+    color: #998b7f;
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.users-empty {
+    text-align: center;
+    padding: 24px !important;
+    color: #8a817a;
+}
+
+@media (max-width: 700px) {
+    .users-table th:last-child,
+    .users-table td:last-child {
+        min-width: 155px;
+        width: 155px;
+    }
+
+    .user-actions {
+        gap: 5px;
+    }
+
+    .user-action-btn {
+        padding: 6px 7px;
+    }
+
+    .user-action-btn span {
+        display: inline;
+    }
+}
+
+/* FIX: Pulihkan tampilan form edit pengguna */
+.user-form-page {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 28px 4px 40px;
+    color: #302319;
+}
+
+.user-form-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 26px;
+}
+
+.user-form-card {
+    display: block;
+    width: 100%;
+    max-width: 790px;
+    margin: 0 auto 0 0;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #eee1d6;
+    border-radius: 17px;
+    box-shadow: 0 8px 28px rgba(65, 43, 28, .045);
+}
+
+.user-form-card-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 24px;
+    border-bottom: 1px solid #f0e5dc;
+}
+
+.user-form-card-body {
+    padding: 24px;
+}
+
+.user-form-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 22px 20px;
+}
+
+.user-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+.user-form-field.full {
+    grid-column: 1 / -1;
+}
+
+.user-form-field label {
+    color: #493426;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.user-form-field input,
+.user-form-field select {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 43px;
+    padding: 0 13px;
+    border: 1px solid #e8d9cc;
+    border-radius: 9px;
+    outline: none;
+    background: #fffdfb;
+    color: #302319;
+    font-family: inherit;
+    font-size: 12px;
+}
+
+.user-form-field input:focus,
+.user-form-field select:focus {
+    border-color: #9a7456;
+    box-shadow: 0 0 0 3px rgba(154, 116, 86, .11);
+}
+
+.user-form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid #f0e5dc;
+}
+
+.user-form-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 41px;
+    padding: 0 17px;
+    border-radius: 9px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.user-form-button.secondary {
+    border: 1px solid #e8d9cc;
+    background: #fff;
+    color: #65432f;
+}
+
+.user-form-button.primary {
+    border: 1px solid #65432f;
+    background: #65432f;
+    color: #fff;
+}
+
+@media (max-width: 700px) {
+    .user-form-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .user-form-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .user-form-field.full {
+        grid-column: auto;
+    }
+
+    .user-form-card-body {
+        padding: 18px;
+    }
+}
+
+/* Tombol Kembali ke Pengguna */
+.user-back-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    min-height: 40px;
+    padding: 0 15px;
+
+    border: 1px solid #e8d9cc;
+    border-radius: 9px;
+
+    background: #fff;
+    color: #65432f;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+.user-back-button:hover {
+    background: #faf4ee;
+    border-color: #d9bda5;
+    color: #513623;
+}
+
+.user-back-button:active {
+    transform: translateY(1px);
+}
+
+.user-back-button svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+}
+
 /* =====================================================
    Mobile
    ===================================================== */
