@@ -44,7 +44,7 @@
 </div>
 
 {{-- Alert Monitoring --}}
-<div class="alert success">
+<div class="alert success" id="monitoringAlert">
     <i data-lucide="check-circle"></i>
 
     <span>
@@ -70,13 +70,13 @@
             <span>Status</span>
 
             @if ($latestLog && $latestLog->status === 'online')
-                <strong class="green-text">Online</strong>
+                <strong id="monitoringStatus" class="green-text">Online</strong>
                 <small>Gateway dapat dijangkau</small>
             @elseif ($latestLog)
-                <strong class="red-text">Offline</strong>
+                <strong id="monitoringStatus" class="red-text">Offline</strong>
                 <small>Gateway tidak dapat dijangkau</small>
             @else
-                <strong>Belum Dicek</strong>
+                <strong id="monitoringStatus">Belum Dicek</strong>
                 <small>Belum ada data monitoring</small>
             @endif
         </div>
@@ -89,10 +89,10 @@
         </div>
 
         <div>
-            <span>Latency</span>
-            <strong>{{ $averageLatency }} ms</strong>
-            <small>Rata-rata 24 jam</small>
-        </div>
+    <span>Latency</span>
+    <strong id="averageLatency">{{ $averageLatency }} ms</strong>
+    <small>Rata-rata 24 jam</small>
+</div>
     </div>
 
     {{-- Packet Loss --}}
@@ -402,11 +402,161 @@
 
 </div>
 
+
+
 <script>
-    setInterval(function () {
-        window.location.reload();
-    }, 30000);
+document.addEventListener('DOMContentLoaded', function () {
+    let previousData = {};
+    let isFirstCheck = true;
+    let isChecking = false;
+
+    async function updateMonitoring() {
+        if (isChecking) return;
+        isChecking = true;
+
+        try {
+            const response = await fetch(
+                '{{ route("dashboard.monitoring-updates") }}',
+                {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error('Gagal mengambil data monitoring');
+            }
+
+            
+const data = await response.json();
+
+if (!data.success || !Array.isArray(data.gateways)) {
+    return;
+}
+
+// Perbarui KPI dashboard
+const statusElement = document.getElementById('monitoringStatus');
+const latencyElement = document.getElementById('averageLatency');
+const packetLossElement = document.getElementById('packetLoss');
+const uptimeElement = document.getElementById('uptime');
+const alertElement = document.getElementById('monitoringAlert');
+
+if (statusElement && data.kpi) {
+    const status = data.kpi.status;
+
+    statusElement.textContent =
+        status === 'online' ? 'Online' :
+        status === 'offline' ? 'Offline' : 'Belum Dicek';
+
+    statusElement.classList.toggle('green-text', status === 'online');
+    statusElement.classList.toggle('red-text', status === 'offline');
+}
+
+if (latencyElement && data.kpi) {
+    latencyElement.textContent = data.kpi.average_latency + ' ms';
+}
+
+if (packetLossElement && data.kpi) {
+    packetLossElement.textContent = data.kpi.packet_loss + '%';
+}
+
+if (uptimeElement && data.kpi) {
+    uptimeElement.textContent = data.kpi.uptime + '%';
+}
+
+if (alertElement && data.latest_log) {
+    const alertText = alertElement.querySelector('span');
+
+    if (alertText && data.latest_log.checked_at) {
+        alertText.textContent =
+            'Data terakhir diperbarui pada ' +
+            data.latest_log.checked_at + '.';
+    }
+}
+
+
+            const changes = [];
+
+            data.gateways.forEach(function (gateway) {
+                const previous = previousData[gateway.gateway_id];
+
+                if (!isFirstCheck && previous) {
+                    if (
+                        previous.status !== 'offline' &&
+                        gateway.status === 'offline'
+                    ) {
+                        changes.push({
+                            priority: 1,
+                            title: 'PACKET LOSS',
+                            message: gateway.gateway_name +
+                                ' tidak merespons. Silakan periksa koneksi jaringan.',
+                            icon: 'wifi-off',
+                            type: 'error'
+                        });
+                    } else if (
+                        previous.status === 'offline' &&
+                        gateway.status === 'online'
+                    ) {
+                        changes.push({
+                            priority: 1,
+                            title: 'KONEKSI KEMBALI NORMAL',
+                            message: gateway.gateway_name +
+                                ' berhasil terhubung kembali.',
+                            icon: 'wifi',
+                            type: 'success'
+                        });
+                    } else if (
+                        previous.checked_at !== gateway.checked_at
+                    ) {
+                        changes.push({
+                            priority: 2,
+                            title: 'MONITORING TELAH DIPERBARUI',
+                            message: 'Data monitoring berhasil diperbarui. Pemeriksaan otomatis setiap 30 detik.',
+                            icon: 'refresh-cw',
+                            type: 'success'
+                        });
+                    }
+                }
+
+                previousData[gateway.gateway_id] = {
+                    status: gateway.status,
+                    checked_at: gateway.checked_at
+                };
+            });
+
+            if (!isFirstCheck && changes.length > 0) {
+                changes.sort(function (a, b) {
+                    return a.priority - b.priority;
+                });
+
+                const notification = changes[0];
+
+                if (typeof window.showAppToast === 'function') {
+                    window.showAppToast(
+                        notification.title,
+                        notification.message,
+                        notification.icon,
+                        notification.type
+                    );
+                }
+            }
+
+            isFirstCheck = false;
+
+        } catch (error) {
+            console.error('Monitoring update gagal:', error);
+        } finally {
+            isChecking = false;
+        }
+    }
+
+    updateMonitoring();
+    setInterval(updateMonitoring, 5000);
+});
 </script>
+
+
 
 <div id="chartTooltip" class="chart-tooltip"></div>
 

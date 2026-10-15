@@ -55,6 +55,12 @@ Route::middleware('auth')->group(function () {
         'index'
     ])->name('dashboard');
 
+    
+Route::get('/dashboard/monitoring-updates', [
+    DashboardController::class,
+    'monitoringUpdates'
+])->name('dashboard.monitoring-updates');
+
 
     // Histori
     Route::get('/history', [

@@ -250,6 +250,8 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(removeToast, 4000);
 }
 
+    window.showAppToast = showAppToast;
+
 function showRestrictionToast(message) {
     const role = document.body.dataset.role || "user";
 

@@ -316,4 +316,209 @@ class DashboardController extends Controller
             )
         );
     }
+    
+public function monitoringUpdates(Request $request)
+{
+    $periodOptions = [
+        '24h' => now()->subDay(),
+        '7d' => now()->subDays(7),
+        '30d' => now()->subDays(30),
+    ];
+
+    $period = $request->query('period', '24h');
+
+    if (!isset($periodOptions[$period])) {
+        $period = '24h';
+    }
+
+    $periodStart = $periodOptions[$period];
+    $gatewayId = $request->query('gateway_id');
+
+    // Status gateway terbaru untuk notifikasi
+    $gatewaysQuery = Gateway::query()
+        ->where('is_active', true);
+
+    if ($gatewayId) {
+        $gatewaysQuery->where('id', $gatewayId);
+    }
+
+    $gateways = $gatewaysQuery
+        ->with('latestConnectionLog')
+        ->get();
+
+    $gatewayUpdates = $gateways->map(function ($gateway) {
+        $log = $gateway->latestConnectionLog;
+
+        return [
+            'gateway_id' => $gateway->id,
+            'gateway_name' => $gateway->name,
+            'status' => $log?->status ?? 'unknown',
+            'response_time' => $log?->response_time,
+            'checked_at' => $log?->checked_at?->toIso8601String(),
+        ];
+    })->values();
+
+    // Data monitoring sesuai periode dan gateway terpilih
+    $logsQuery = ConnectionLog::query()
+        ->where('checked_at', '>=', $periodStart);
+
+    if ($gatewayId) {
+        $logsQuery->where('gateway_id', $gatewayId);
+    }
+
+    $logs = $logsQuery
+        ->orderBy('checked_at')
+        ->get();
+
+    $totalChecks = $logs->count();
+
+    $onlineChecks = $logs
+        ->where('status', 'online')
+        ->count();
+
+    $offlineChecks = $totalChecks - $onlineChecks;
+
+    $uptime = $totalChecks > 0
+        ? round(($onlineChecks / $totalChecks) * 100, 1)
+        : 0;
+
+    $averageLatency = round(
+        $logs->where('status', 'online')
+            ->whereNotNull('response_time')
+            ->avg('response_time') ?? 0,
+        1
+    );
+
+    $packetLoss = $totalChecks > 0
+        ? round(($offlineChecks / $totalChecks) * 100, 1)
+        : 0;
+
+    // Data monitoring terbaru
+    $latestLogQuery = ConnectionLog::with('gateway')
+        ->latest('checked_at');
+
+    if ($gatewayId) {
+        $latestLogQuery->where('gateway_id', $gatewayId);
+    }
+
+    $latestLog = $latestLogQuery->first();
+
+    $latestLogsQuery = ConnectionLog::with('gateway')
+        ->latest('checked_at');
+
+    if ($gatewayId) {
+        $latestLogsQuery->where('gateway_id', $gatewayId);
+    }
+
+    $latestLogs = $latestLogsQuery
+        ->limit(5)
+        ->get()
+        ->map(function ($log) {
+            return [
+                'gateway_name' => $log->gateway?->name ?? '-',
+                'checked_at' => $log->checked_at
+                    ->format('d M Y, H:i:s'),
+                'response_time' => $log->response_time,
+                'packet_loss' => $log->status === 'online' ? 0 : 100,
+                'status' => $log->status,
+            ];
+        })
+        ->values();
+
+    // Siapkan titik grafik
+    $chartLogs = $logs->values();
+
+    $maxChartPoints = 100;
+
+    if ($chartLogs->count() > $maxChartPoints) {
+        $step = $chartLogs->count() / $maxChartPoints;
+        $sampledLogs = collect();
+
+        for ($i = 0; $i < $maxChartPoints; $i++) {
+            $index = (int) floor($i * $step);
+
+            if (isset($chartLogs[$index])) {
+                $sampledLogs->push($chartLogs[$index]);
+            }
+        }
+
+        $chartLogs = $sampledLogs->values();
+    }
+
+    $chartCount = $chartLogs->count();
+    $latencyValues = $chartLogs
+        ->where('status', 'online')
+        ->whereNotNull('response_time')
+        ->pluck('response_time');
+
+    $maxLatency = max(
+        100,
+        (float) ($latencyValues->max() ?? 100)
+    );
+
+    $maxLatency = ceil($maxLatency * 1.15);
+
+    $chartData = $chartLogs->values()->map(
+        function ($log, $index) use ($chartCount, $maxLatency) {
+            $x = $chartCount > 1
+                ? ($index / ($chartCount - 1)) * 600
+                : 300;
+
+            $latency = $log->response_time;
+
+            $latencyY = $log->status === 'online'
+                && $latency !== null
+                ? 200 - ($latency / $maxLatency) * 180
+                : 200;
+
+            $latencyY = max(20, min(200, $latencyY));
+
+            $loss = $log->status === 'online' ? 0 : 100;
+            $lossY = 200 - ($loss / 100) * 180;
+            $lossY = max(20, min(200, $lossY));
+
+            return [
+                'x' => round($x, 2),
+                'latency_y' => round($latencyY, 2),
+                'latency' => $latency,
+                'time' => $log->checked_at->format('H:i:s'),
+                'loss_y' => round($lossY, 2),
+            ];
+        }
+    );
+
+    return response()->json([
+        'success' => true,
+        'server_time' => now()->toIso8601String(),
+        'period' => $period,
+        'gateway_id' => $gatewayId,
+
+        'gateways' => $gatewayUpdates,
+
+        'kpi' => [
+            'status' => $latestLog?->status ?? 'offline',
+            'average_latency' => $averageLatency,
+            'packet_loss' => $packetLoss,
+            'uptime' => $uptime,
+        ],
+
+        'summary' => [
+            'total_checks' => $totalChecks,
+            'total_incidents' => $offlineChecks,
+        ],
+
+        'latest_log' => [
+            'checked_at' => $latestLog?->checked_at
+                ?->format('d F Y, H:i:s'),
+        ],
+
+        'latest_logs' => $latestLogs,
+
+        'chart' => [
+            'max_latency' => $maxLatency,
+            'points' => $chartData,
+        ],
+    ]);
+}
+
 }
